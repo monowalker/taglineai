@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Node
+node_modules/
+dist/
+.vite/
+npm-debug.log*
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+
+# ローカル上書き用の環境変数 (.env はリポジトリに含める)
+.env.local
+
+# モデル定義。API キーを平文で書くためリポジトリに含めない。
+# 雛形は models.example.yml をコミットしてあるので、初回は
+#   cp models.example.yml models.yml
+# としてから編集する。
+models.yml

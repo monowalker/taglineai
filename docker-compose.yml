@@ -1,0 +1,98 @@
+# 商品キャッチフレーズ抽出 — full stack
+#
+#   docker compose up --build
+#
+# 追加セットアップ不要。起動後 http://localhost:${APP_PORT:-8090} を開く。
+#
+#   nginx    : 唯一の公開口。/ -> frontend, /api/ -> backend
+#   frontend : React + Vite のビルド成果物を静的配信 (内部 80)
+#   backend  : FastAPI + uvicorn (内部 8000)
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: taglineai-backend:latest
+    container_name: taglineai-backend
+    env_file:
+      - .env
+    environment:
+      # .env で未指定でも動くよう既定値をここで補完する。
+      LLM_API_BASE: ${LLM_API_BASE:-http://host.docker.internal:8080/v1}
+      LLM_MODEL: ${LLM_MODEL:-local}
+      LLM_API_KEY: ${LLM_API_KEY:-}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      # models.yml の api_key: "${VAR}" から参照される想定のキー。
+      # .env に書いておけばここを経由してコンテナに渡る。
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+    # ローカル LLM がホスト側 (llama_server など) で動いている場合の到達経路。
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    # 観点(ペルソナ)プリセットと👍で貯めたお手本の保存先。
+    # コンテナを作り直しても残るよう named volume に置く。
+    volumes:
+      - taglineai_data:/data
+      # 使用できるモデルの定義。編集後は `docker compose restart backend` で反映
+      # (再ビルド不要)。ファイルが無い場合は LLM_* の環境変数から 1 件生成される。
+      - ./models.yml:/app/models.yml:ro
+    expose:
+      - "8000"
+    networks:
+      - taglineai_net
+    restart: unless-stopped
+    healthcheck:
+      # コンテナ内の localhost は ::1 にしか解決しないため 127.0.0.1 を明示する。
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3).status == 200 else 1)"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: taglineai-frontend:latest
+    container_name: taglineai-frontend
+    expose:
+      - "80"
+    networks:
+      - taglineai_net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    image: taglineai-nginx:latest
+    container_name: taglineai-nginx
+    ports:
+      - "${APP_PORT:-8090}:80"
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - taglineai_net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+networks:
+  taglineai_net:
+    driver: bridge
+
+volumes:
+  taglineai_data:

@@ -1,0 +1,76 @@
+# ============================================================================
+# 使用できる LLM の一覧 (雛形)。画面右上のプルダウンで切り替えられる。
+#
+# 初回セットアップ:
+#   cp models.example.yml models.yml
+# としてから models.yml のほうを編集してください。
+#
+# **このファイルには API キーを書かないでください。**
+# models.yml は .gitignore 済みなのでキーを直書きできますが、
+# models.example.yml はリポジトリに含まれます。
+#
+# 編集を反映するには:
+#   docker compose restart backend        (再ビルド不要)
+#
+# API キーの書き方:
+#   api_key: "${GEMINI_API_KEY}"   環境変数を参照 (.env に書いた値を読む) ← 推奨
+#   api_key: "AIza..."             直書き (models.yml のみ)
+#   api_key: ""                    キー不要のサーバ (ローカル LLM など)
+#
+# 省略可能な項目 (省略時は .env の値が使われる):
+#   label        プルダウンの表示名 … 既定は id
+#   concurrency  同時リクエスト数   … 既定 LLM_CONCURRENCY
+#   timeout      タイムアウト秒     … 既定 LLM_TIMEOUT
+#   temperature  サンプリング温度   … 既定 LLM_TEMPERATURE
+#   max_tokens   応答上限トークン数 … 既定 LLM_MAX_TOKENS
+#
+# 注意: model にはプロバイダが定めた**モデルID**を書きます (表示名ではありません)。
+#   ○ gemini-3.5-flash-lite
+#   × Gemini 3.5 Flash Lite      → 400 unexpected model name format
+#
+# 使えるモデルIDの一覧は、各プロバイダの /models で取得できます:
+#   curl -H "Authorization: Bearer $KEY" https://api.groq.com/openai/v1/models
+#   curl -H "Authorization: Bearer $KEY" \
+#     https://generativelanguage.googleapis.com/v1beta/openai/models
+#   curl -H "Authorization: Bearer $KEY" https://api.anthropic.com/v1/models
+# ============================================================================
+
+# 起動時に選択されているモデルの id。
+# 画面で切り替えた選択はサーバに保存され、次回以降はそちらが優先される。
+default: local
+
+models:
+  # --- llama_server (llama.cpp / Vulkan) ---
+  - id: local
+    label: localLLM
+    api_base: xxx
+    model:
+    api_key: ""
+    concurrency: 1        # llama.cpp の --parallel (LLAMA_PARALLEL) に合わせる
+    timeout: 180          # ローカルは遅いので長め
+
+  # --- 以下はキーを .env に設定すれば使える。不要なら削除 ---
+
+  # - id: gemini
+    # label: Gemini 3.5 Flash Lite
+    # api_base: https://generativelanguage.googleapis.com/v1beta/openai
+    # model: gemini-3.5-flash-lite
+    # api_key: "${GEMINI_API_KEY}"
+    # concurrency: 4
+    # timeout: 60
+
+  # - id: claude
+  #   label: Claude Sonnet 5
+  #   api_base: https://api.anthropic.com/v1
+  #   model: claude-sonnet-5
+  #   api_key: "${ANTHROPIC_API_KEY}"
+  #   concurrency: 4
+  #   timeout: 60
+
+  # - id: openai
+  #   label: GPT-5
+  #   api_base: https://api.openai.com/v1
+  #   model: gpt-5
+  #   api_key: "${OPENAI_API_KEY}"
+  #   concurrency: 4
+  #   timeout: 60

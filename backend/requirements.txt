@@ -1,0 +1,27 @@
+# ---- Web フレームワーク ----
+fastapi==0.141.1
+uvicorn[standard]==0.52.0
+pydantic==2.13.4
+pydantic-settings==2.14.2
+
+# ---- HTML 取得 ----
+requests==2.34.2
+charset-normalizer==3.4.9
+
+# ---- HTML 解析 / 本文抽出 ----
+beautifulsoup4==4.15.0
+lxml==6.1.1
+lxml_html_clean==0.4.5
+readability-lxml==0.8.4.1
+trafilatura==2.1.0
+
+# ---- LLM (OpenAI 互換) ----
+openai==2.51.0
+
+# ---- モデル定義ファイル (models.yml) ----
+PyYAML==6.0.3
+
+# ---- テスト ----
+# 非同期テストは asyncio.run() で回すため pytest-asyncio は使わない。
+pytest==9.1.1
+httpx==0.28.1

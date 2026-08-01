@@ -1,0 +1,438 @@
+/* 白基調・シンプル・レスポンシブ。Bootstrap の上に最小限の味付けだけを載せる。 */
+
+:root {
+  --app-border: #e5e7eb;
+  --app-muted: #6b7280;
+  --app-bg: #f8f9fa;
+}
+
+body {
+  background-color: var(--app-bg);
+  color: #1f2937;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', 'Hiragino Sans',
+    'Hiragino Kaku Gothic ProN', 'Noto Sans JP', Meiryo, sans-serif;
+}
+
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* --- ヘッダ --- */
+
+.app-header {
+  background-color: #fff;
+  border-bottom: 1px solid var(--app-border);
+  padding: 1.5rem 0;
+}
+
+.app-header-inner {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.app-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  margin-bottom: 0.25rem;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 0 0 auto;
+}
+
+.model-select {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.model-select-label {
+  color: var(--app-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.model-select .form-select {
+  min-width: 12rem;
+  max-width: 18rem;
+}
+
+.settings-button {
+  position: relative;
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+/* 観点やお手本が設定されていることを示す小さな印。 */
+.settings-dot {
+  position: absolute;
+  top: -0.2rem;
+  right: -0.2rem;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background-color: #0d6efd;
+}
+
+.app-subtitle {
+  color: var(--app-muted);
+  font-size: 0.9rem;
+}
+
+/* --- 本体 --- */
+
+.app-main {
+  flex: 1 0 auto;
+  padding-top: 1.75rem;
+  padding-bottom: 3rem;
+  max-width: 880px;
+}
+
+.app-card {
+  background-color: #fff;
+  border: 1px solid var(--app-border);
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 4%);
+}
+
+.app-card .card-body {
+  padding: 1.5rem;
+}
+
+.url-textarea {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  resize: vertical;
+}
+
+/* 現在の抽出条件 (観点・お手本) の表示 */
+.condition-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.5rem;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px dashed var(--app-border);
+  font-size: 0.8rem;
+  color: var(--app-muted);
+}
+
+.condition-bar .btn-link {
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.condition-value {
+  color: #1f2937;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: min(100%, 30rem);
+}
+
+/* --- 結果カード --- */
+
+.result-card-error {
+  border-color: #f5c2c7;
+}
+
+.result-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.result-index {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  background-color: #f1f3f5;
+  color: var(--app-muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.result-url {
+  font-size: 0.85rem;
+  color: #0d6efd;
+  text-decoration: none;
+}
+
+.result-url:hover {
+  text-decoration: underline;
+}
+
+.result-line {
+  margin-top: 1.1rem;
+}
+
+.result-line-label {
+  color: var(--app-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.result-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.result-line-text {
+  font-size: 1rem;
+  line-height: 1.75;
+  word-break: break-word;
+}
+
+.thumb-button {
+  white-space: nowrap;
+}
+
+/* --- コピーボタン --- */
+
+.copy-button {
+  --bs-btn-padding-y: 0.1rem;
+  --bs-btn-padding-x: 0.4rem;
+  --bs-btn-font-size: 0.75rem;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.copy-button-text {
+  font-size: 0.72rem;
+}
+
+/* --- 候補文の一覧 --- */
+
+/* meta 行の中でリンク風のトグルにする */
+.result-meta-toggle {
+  --bs-btn-padding-y: 0;
+  --bs-btn-padding-x: 0;
+  --bs-btn-font-size: 0.75rem;
+  vertical-align: baseline;
+  text-decoration: none;
+}
+
+.result-meta-toggle:disabled {
+  color: var(--app-muted);
+  opacity: 1;
+}
+
+.candidate-panel {
+  margin-top: 0.9rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--app-border);
+  border-radius: 0.5rem;
+  background-color: #fbfcfd;
+}
+
+.candidate-panel-note {
+  margin: 0 0 0.6rem;
+  font-size: 0.75rem;
+  color: var(--app-muted);
+}
+
+.candidate-list {
+  list-style: decimal;
+  margin: 0;
+  padding-left: 1.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  /* 候補が多いページでもカードが伸びすぎないようにする */
+  max-height: 22rem;
+  overflow-y: auto;
+}
+
+.candidate-item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  padding: 0.15rem 0.3rem;
+  border-radius: 0.25rem;
+}
+
+.candidate-item.chosen {
+  background-color: #eaf5ea;
+  font-weight: 600;
+}
+
+.candidate-mark {
+  flex: 0 0 1rem;
+  color: #198754;
+}
+
+.candidate-text {
+  flex: 1 1 auto;
+  word-break: break-word;
+}
+
+.candidate-item .copy-button {
+  flex: 0 0 auto;
+  opacity: 0;
+  transition: opacity 0.1s;
+}
+
+.candidate-item:hover .copy-button,
+.candidate-item:focus-within .copy-button {
+  opacity: 1;
+}
+
+/* --- 設定ダイアログ --- */
+
+.settings-section + .settings-section {
+  margin-top: 1.75rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--app-border);
+}
+
+.settings-heading {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+}
+
+.settings-subsection {
+  margin-top: 1.25rem;
+}
+
+.preset-list,
+.example-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.preset-item,
+.example-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid var(--app-border);
+  border-radius: 0.5rem;
+  background-color: #fff;
+}
+
+.preset-item.active {
+  border-color: #0d6efd;
+  background-color: #f5f9ff;
+}
+
+.preset-name,
+.example-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.preset-prompt {
+  margin-top: 0.15rem;
+  font-size: 0.8rem;
+  color: var(--app-muted);
+  word-break: break-word;
+}
+
+.example-part {
+  margin-top: 0.15rem;
+  font-size: 0.82rem;
+  color: var(--app-muted);
+  word-break: break-word;
+}
+
+/* Bootstrap の JS を読み込んでいないため、背景の暗幕は自前で出す。 */
+.modal-backdrop.show {
+  opacity: 0.5;
+}
+
+.result-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  margin-top: 1.25rem;
+  padding-top: 0.75rem;
+  border-top: 1px dashed var(--app-border);
+  color: var(--app-muted);
+  font-size: 0.75rem;
+}
+
+/* --- フッタ --- */
+
+.app-footer {
+  background-color: #fff;
+  border-top: 1px solid var(--app-border);
+  padding: 1rem 0;
+  color: var(--app-muted);
+  font-size: 0.8rem;
+}
+
+/* --- 狭い画面 --- */
+
+@media (max-width: 576px) {
+  .app-card .card-body {
+    padding: 1.15rem;
+  }
+
+  .app-title {
+    font-size: 1.25rem;
+  }
+
+  .result-title {
+    font-size: 1.05rem;
+  }
+
+  .preset-item,
+  .example-item {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  /* タッチ端末には hover が無いので、コピーボタンは常に見せる */
+  .candidate-item .copy-button {
+    opacity: 1;
+  }
+
+  /* 狭い画面ではモデル選択を見出しの下に回す */
+  .app-header-inner {
+    flex-wrap: wrap;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .model-select {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .model-select .form-select {
+    min-width: 0;
+    max-width: none;
+  }
+}
